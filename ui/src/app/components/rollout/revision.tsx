@@ -89,7 +89,7 @@ const AnalysisRunWidget = (props: {analysisRuns: RolloutAnalysisRunInfo[]}) => {
 
     return (
         <ThemeDiv className='analysis'>
-            <div className='analysis-header'>Analysis Runs</div>
+            <div className='analysis-header'>Analysis Runs testing</div>
             <div className='analysis__runs'>
                 {analysisRuns.map((ar) => {
                     let temp = ar.objectMeta.name.split('-');
