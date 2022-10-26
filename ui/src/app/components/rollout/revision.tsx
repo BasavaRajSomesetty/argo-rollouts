@@ -89,8 +89,9 @@ const AnalysisRunWidget = (props: {analysisRuns: RolloutAnalysisRunInfo[]}) => {
 
     return (
         <ThemeDiv className='analysis'>
-            <div className='analysis-header'>Analysis Runs testing</div>
+            <div className='analysis-header'>Analysis Runs Test</div>
             <div className='analysis__runs'>
+                  {console.log(analysisRuns)};
                 {analysisRuns.map((ar) => {
                     let temp = ar.objectMeta.name.split('-');
                     let len = temp.length;
@@ -110,6 +111,10 @@ const AnalysisRunWidget = (props: {analysisRuns: RolloutAnalysisRunInfo[]}) => {
                                         <b>Status: </b>
                                         {ar.status}
                                     </div>
+                                    <div>
+                                        <b>dummytext:</b>
+                                        {ar.status}
+                                    </div>   
                                 </React.Fragment>
                             }>
                             <div
@@ -121,6 +126,7 @@ const AnalysisRunWidget = (props: {analysisRuns: RolloutAnalysisRunInfo[]}) => {
                                     label={`Analysis ${temp[len - 2] + '-' + temp[len - 1]}`}
                                 />
                             </div>
+                            
                         </Tooltip>
                     );
                 })}
