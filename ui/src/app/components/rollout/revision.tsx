@@ -24,7 +24,9 @@ const handleClick = (applicationName:String,resouceName:String,nameSpace:String,
         return response.json()
       })
       .then((data: any) => {
-        console.log(data);
+        let a = JSON.parse(data.manifest);
+        console.log(a.status.metricResults[0].measurements[0].metadata.reportUrl);
+        
       }).catch(err => {
        
         console.error('res.data', err)
