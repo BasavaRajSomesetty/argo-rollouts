@@ -3,7 +3,7 @@ import * as React from 'react';
 import {RolloutAnalysisRunInfo, RolloutExperimentInfo, RolloutReplicaSetInfo} from '../../../models/rollout/generated';
 import {IconForTag} from '../../shared/utils/utils';
 import {PodWidget, ReplicaSets} from '../pods/pods';
-import {ImageInfo, parseImages} from './rollout';
+import {ImageInfo, parseImages, RolloutWidget, Rollout} from './rollout';
 import './rollout.scss';
 import '../pods/pods.scss';
 
@@ -91,7 +91,9 @@ const AnalysisRunWidget = (props: {analysisRuns: RolloutAnalysisRunInfo[]}) => {
         <ThemeDiv className='analysis'>
             <div className='analysis-header'>Analysis Runs Test</div>
             <div className='analysis__runs'>
-                  {console.log(analysisRuns)};
+                   {console.log('rollout',Rollout)}
+                   {console.log('rollwidget', RolloutWidget)}
+                  {console.log('analysis', analysisRuns)}
                 {analysisRuns.map((ar) => {
                     let temp = ar.objectMeta.name.split('-');
                     let len = temp.length;
