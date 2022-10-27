@@ -14,10 +14,21 @@ export interface Revision {
     analysisRuns: RolloutAnalysisRunInfo[];
 }
 
-const handleClick = () => {
-    let url = '/api/v1/applications/final-tests/resource?name=demoapp-issuegen-59f855cd9f-2-2.1&namespace=argocd&resourceName=demoapp-issuegen-59f855cd9f-2-2.1&version=v1alpha1&kind=AnalysisRun&group=argoproj.io'
+const handleClick = (applicationName:String,resouceName:String,nameSpace:String,version:String) => {
+    let url = '/api/v1/applications/'+applicationName+'/resource?name='+resouceName+'&namespace='+nameSpace+'&resourceName='+resouceName+'&version='+version+'&kind=AnalysisRun&group=argoproj.io';
     fetch(url)
-        .then(response => console.log(response));
+    .then(response => {
+        // if (response.status > 399) {
+        //   throw new Error("No metrics");
+        // }
+        return response.json()
+      })
+      .then((data: any) => {
+        console.log(data);
+      }).catch(err => {
+       
+        console.error('res.data', err)
+      });
 };
 
 const ImageItems = (props: {images: ImageInfo[]}) => {
@@ -103,6 +114,9 @@ const AnalysisRunWidget = (props: {analysisRuns: RolloutAnalysisRunInfo[],appNam
                 {analysisRuns.map((ar) => {
                     let temp = ar.objectMeta.name.split('-');
                     let len = temp.length;
+                    let resourceName = analysisRuns[len].objectMeta.name;
+                    let namespace = analysisRuns[len].objectMeta.namespace;
+                    let version = analysisRuns[len].objectMeta.resourceVersion;
                     return (
                         <Tooltip
                             key={ar.objectMeta?.name}
@@ -128,9 +142,9 @@ const AnalysisRunWidget = (props: {analysisRuns: RolloutAnalysisRunInfo[],appNam
                                 <ActionButton
                                     action={
                                         () => {
-                                            (selection?.objectMeta.name === ar.objectMeta.name ? setSelection(null) : setSelection(ar));handleClick()
+                                            (selection?.objectMeta.name === ar.objectMeta.name ? setSelection(null) : setSelection(ar));handleClick(props.appName,resourceName,namespace,version)
                                         }}
-                                    label={`Analysis ${temp[len - 2] + '-' + temp[len - 1]}`}
+                                    label={`Analysis ${temp[len - 2] + '-' + temp[len - 1]}`}  
                                 />
                             </div>
                             
@@ -144,6 +158,7 @@ const AnalysisRunWidget = (props: {analysisRuns: RolloutAnalysisRunInfo[],appNam
                     <div style={{marginTop: 5}}>
                         {selection.objectMeta?.name}
                         <i className={`fa ${selection.status === 'Successful' ? 'fa-check-circle analysis--success' : 'fa-times-circle analysis--failure'}`} />
+                    {/* <a href="google.com" >View Report</a> */}
                     </div>
                     {selection?.jobs && (
                         <div className='analysis__run__jobs'>
