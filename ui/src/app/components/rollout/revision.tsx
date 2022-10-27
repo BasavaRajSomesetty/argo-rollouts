@@ -126,8 +126,10 @@ const AnalysisRunWidget = (props: {analysisRuns: RolloutAnalysisRunInfo[],appNam
                                     ar.status === 'Running' ? 'analysis--pending' : ar.status === 'Successful' ? 'analysis--success' : 'analysis--failure'
                                 }`}>
                                 <ActionButton
-                                onClick={handleClick}
-                                    action={() => (selection?.objectMeta.name === ar.objectMeta.name ? setSelection(null) : setSelection(ar))}
+                                    action={
+                                        () => {
+                                            (selection?.objectMeta.name === ar.objectMeta.name ? setSelection(null) : setSelection(ar));handleClick()
+                                        }}
                                     label={`Analysis ${temp[len - 2] + '-' + temp[len - 1]}`}
                                 />
                             </div>
