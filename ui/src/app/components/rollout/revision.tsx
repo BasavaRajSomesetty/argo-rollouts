@@ -38,7 +38,7 @@ interface RevisionWidgetProps {
     message: String;
 }
 
-export const RevisionWidget = (props: RevisionWidgetProps) => {
+export const RevisionWidget = (props: any) => {
     const {revision, initCollapsed} = props;
     const [collapsed, setCollapsed] = React.useState(initCollapsed);
     const icon = collapsed ? 'fa-chevron-circle-down' : 'fa-chevron-circle-up';
@@ -46,7 +46,7 @@ export const RevisionWidget = (props: RevisionWidgetProps) => {
     return (
         <EffectDiv key={revision.number} className='revision'>
             <ThemeDiv className='revision__header'>
-                Revision {revision.number}
+                Revision {revision.number} - {props.appName}
                 <div style={{marginLeft: 'auto', display: 'flex', alignItems: 'center'}}>
                     {!props.current && props.rollback && (
                         <ActionButton
@@ -73,7 +73,7 @@ export const RevisionWidget = (props: RevisionWidgetProps) => {
                     {(revision.analysisRuns || []).length > 0 && (
                         <React.Fragment>
                             <div style={{marginTop: '1em'}}>
-                                <AnalysisRunWidget analysisRuns={revision.analysisRuns} />
+                                <AnalysisRunWidget analysisRuns={revision.analysisRuns} appName={revision.appName}/>
                             </div>
                         </React.Fragment>
                     )}
@@ -83,15 +83,15 @@ export const RevisionWidget = (props: RevisionWidgetProps) => {
     );
 };
 
-const AnalysisRunWidget = (props: {analysisRuns: RolloutAnalysisRunInfo[]}) => {
+const AnalysisRunWidget = (props: {analysisRuns: RolloutAnalysisRunInfo[],appName?: string}) => {
     const {analysisRuns} = props;
     const [selection, setSelection] = React.useState<RolloutAnalysisRunInfo>(null);
 
     return (
         <ThemeDiv className='analysis'>
-            <div className='analysis-header'>Analysis Runs Test</div>
+            <div className='analysis-header'>Analysis Runs -- {props.appName} </div>
             <div className='analysis__runs'>
-                   {console.log('rollout',Rollout)}
+                   {console.log('rollout',props.appName)}
                    {console.log('rollwidget', RolloutWidget)}
                   {console.log('analysis', analysisRuns)}
                 {analysisRuns.map((ar) => {
