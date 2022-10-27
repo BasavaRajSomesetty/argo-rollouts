@@ -36,9 +36,10 @@ interface RevisionWidgetProps {
     rollback?: (revision: number) => void;
     current: boolean;
     message: String;
+    appName: String;
 }
 
-export const RevisionWidget = (props: any) => {
+export const RevisionWidget = (props: RevisionWidgetProps) => {
     const {revision, initCollapsed} = props;
     const [collapsed, setCollapsed] = React.useState(initCollapsed);
     const icon = collapsed ? 'fa-chevron-circle-down' : 'fa-chevron-circle-up';
@@ -73,7 +74,7 @@ export const RevisionWidget = (props: any) => {
                     {(revision.analysisRuns || []).length > 0 && (
                         <React.Fragment>
                             <div style={{marginTop: '1em'}}>
-                                <AnalysisRunWidget analysisRuns={revision.analysisRuns} appName={revision.appName}/>
+                                <AnalysisRunWidget analysisRuns={revision.analysisRuns} appName={props.appName}/>
                             </div>
                         </React.Fragment>
                     )}
@@ -83,7 +84,7 @@ export const RevisionWidget = (props: any) => {
     );
 };
 
-const AnalysisRunWidget = (props: {analysisRuns: RolloutAnalysisRunInfo[],appName?: string}) => {
+const AnalysisRunWidget = (props: {analysisRuns: RolloutAnalysisRunInfo[],appName?: String}) => {
     const {analysisRuns} = props;
     const [selection, setSelection] = React.useState<RolloutAnalysisRunInfo>(null);
 
