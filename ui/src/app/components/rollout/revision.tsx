@@ -14,6 +14,12 @@ export interface Revision {
     analysisRuns: RolloutAnalysisRunInfo[];
 }
 
+const handleClick = () => {
+    let url = '/api/v1/applications/final-tests/resource?name=demoapp-issuegen-59f855cd9f-2-2.1&namespace=argocd&resourceName=demoapp-issuegen-59f855cd9f-2-2.1&version=v1alpha1&kind=AnalysisRun&group=argoproj.io'
+    fetch(url)
+        .then(response => console.log(response));
+};
+
 const ImageItems = (props: {images: ImageInfo[]}) => {
     return (
         <div>
@@ -112,10 +118,6 @@ const AnalysisRunWidget = (props: {analysisRuns: RolloutAnalysisRunInfo[],appNam
                                     <div>
                                         <b>Status: </b>
                                         {ar.status}
-                                    </div>
-                                    <div>
-                                        <b>dummytext:</b>
-                                        {ar.status}
                                     </div>   
                                 </React.Fragment>
                             }>
@@ -124,6 +126,7 @@ const AnalysisRunWidget = (props: {analysisRuns: RolloutAnalysisRunInfo[],appNam
                                     ar.status === 'Running' ? 'analysis--pending' : ar.status === 'Successful' ? 'analysis--success' : 'analysis--failure'
                                 }`}>
                                 <ActionButton
+                                onClick={handleClick}
                                     action={() => (selection?.objectMeta.name === ar.objectMeta.name ? setSelection(null) : setSelection(ar))}
                                     label={`Analysis ${temp[len - 2] + '-' + temp[len - 1]}`}
                                 />
