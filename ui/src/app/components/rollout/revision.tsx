@@ -24,8 +24,14 @@ const handleClick = (applicationName:String,resouceName:String,nameSpace:String,
         return response.json()
       })
       .then((data: any) => {
-        let a = JSON.parse(data.manifest);
-        console.log(a.status.metricResults[0].measurements[0].metadata.reportUrl);
+       
+        if(data.manifest.includes('reportUrl')){
+            let a = JSON.parse(data.manifest);
+            console.log(a.status.metricResults[0].measurements[0].metadata.reportUrl);
+            if(a.status?.metricResults[0]?.measurements[0]?.metadata?.reportUrl){
+                window.open(a.status?.metricResults[0]?.measurements[0]?.metadata?.reportUrl, '_blank');            
+            }
+        }
         
       }).catch(err => {
        
