@@ -114,9 +114,9 @@ const AnalysisRunWidget = (props: {analysisRuns: RolloutAnalysisRunInfo[],appNam
                 {analysisRuns.map((ar) => {
                     let temp = ar.objectMeta.name.split('-');
                     let len = temp.length;
-                    let resourceName = analysisRuns[len].objectMeta.name;
-                    let namespace = analysisRuns[len].objectMeta.namespace;
-                    let version = analysisRuns[len].objectMeta.resourceVersion;
+                    let resourceName = ar.objectMeta.name;
+                    let namespace = ar.objectMeta.namespace;
+                    let version = ar.objectMeta.resourceVersion;
                     return (
                         <Tooltip
                             key={ar.objectMeta?.name}
