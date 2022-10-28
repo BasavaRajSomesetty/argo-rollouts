@@ -150,7 +150,10 @@ const AnalysisRunWidget = (props: {analysisRuns: RolloutAnalysisRunInfo[],appNam
                                 <ActionButton
                                     action={
                                         () => {
-                                            (selection?.objectMeta.name === ar.objectMeta.name ? setSelection(null) : setSelection(ar));handleClick(props.appName,resourceName,namespace,version)
+                                            (selection?.objectMeta.name === ar.objectMeta.name ? setSelection(null) : setSelection(ar));
+                                            if(props?.appName){
+                                                handleClick(props.appName,resourceName,namespace,version)
+                                            }
                                         }}
                                     label={`Analysis ${temp[len - 2] + '-' + temp[len - 1]}`}  
                                 />
