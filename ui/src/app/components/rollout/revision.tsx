@@ -27,9 +27,9 @@ const handleClick = (applicationName:String,resouceName:String,nameSpace:String,
        
         if(data.manifest.includes('reportUrl')){
             let a = JSON.parse(data.manifest);
-            console.log(a.status.metricResults[0].measurements[0].metadata.reportUrl);
-            if(a.status?.metricResults[0]?.measurements[0]?.metadata?.reportUrl){
-                window.open(a.status?.metricResults[0]?.measurements[0]?.metadata?.reportUrl, '_blank');            
+            console.log(a.status.metricResults[a.status.metricResults.length-1].measurements[a.status.metricResults.length-1].metadata.reportUrl);
+            if(a.status?.metricResults[a.status.metricResults.length-1]?.measurements[a.status.metricResults.length-1]?.metadata?.reportUrl){
+                window.open(a.status?.metricResults[a.status.metricResults.length-1]?.measurements[a.status.metricResults.length-1]?.metadata?.reportUrl, '_blank');            
             }
         }
         
@@ -72,7 +72,7 @@ export const RevisionWidget = (props: RevisionWidgetProps) => {
     return (
         <EffectDiv key={revision.number} className='revision'>
             <ThemeDiv className='revision__header'>
-                Revision {revision.number} - {props.appName}
+                Revision {revision.number}
                 <div style={{marginLeft: 'auto', display: 'flex', alignItems: 'center'}}>
                     {!props.current && props.rollback && (
                         <ActionButton
@@ -115,7 +115,7 @@ const AnalysisRunWidget = (props: {analysisRuns: RolloutAnalysisRunInfo[],appNam
 
     return (
         <ThemeDiv className='analysis'>
-            <div className='analysis-header'>Analysis Runs -- {props.appName} </div>
+            <div className='analysis-header'>Analysis Runs</div>
             <div className='analysis__runs'>
                   {console.log('rollout',props.appName)}
                   {console.log('analysis', analysisRuns)}
