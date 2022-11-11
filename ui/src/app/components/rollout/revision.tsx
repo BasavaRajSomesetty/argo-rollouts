@@ -15,8 +15,10 @@ export interface Revision {
 }
 
 const handleClick = (applicationName:String,resouceName:String,nameSpace:String,version:String) => {
-    let url = '/api/v1/applications/'+applicationName+'/resource?name='+resouceName+'&namespace='+nameSpace+'&resourceName='+resouceName+'&version='+version+'&kind=AnalysisRun&group=argoproj.io';
-    fetch(url)
+    //let url = '/api/v1/applications/'+applicationName+'/resource?name='+resouceName+'&namespace='+nameSpace+'&resourceName='+resouceName+'&version='+version+'&kind=AnalysisRun&group=argoproj.io';
+    //https://argocd.argo-dev.opsmx.net/api/v1/applications/jobapp/resource?name=rollouts-demo-bdc6c4d76-3.3&appNamespace=argocd&namespace=argocd&resourceName=rollouts-demo-bdc6c4d76-3.3&version=v1alpha1&kind=AnalysisRun&group=argoproj.io
+    let url2 = '/api/v1/applications/'+applicationName+'/resource?name='+resouceName+'&appNamespace='+nameSpace+'&namespace='+nameSpace+'&resourceName='+resouceName+'&version='+version+'&kind=AnalysisRun&group=argoproj.io';
+    fetch(url2)
     .then(response => {
         // if (response.status > 399) {
         //   throw new Error("No metrics");
@@ -32,12 +34,46 @@ const handleClick = (applicationName:String,resouceName:String,nameSpace:String,
                 window.open(a.status?.metricResults[a.status.metricResults.length-1]?.measurements[a.status.metricResults.length-1]?.metadata?.reportUrl, '_blank');            
             }
         }
+        if(data.manifest.includes('job-name')){
+            let b = JSON.parse(data.manifest);
+            console.log(b);
+            if(b.status?.metricResults[b.status.metricResults.length-1]?.measurements[b.status.metricResults.length-1]?.metadata['job-name']){
+                fetchEndpointURL(applicationName,resouceName,nameSpace,version,b.status?.metricResults[b.status.metricResults.length-1]?.measurements[b.status.metricResults.length-1]?.metadata['job-name']);
+            }
+        }
+
         
       }).catch(err => {
        
         console.error('res.data', err)
       });
 };
+
+const fetchEndpointURL = (applicationName:String,resouceName:String,nameSpace:String,version:String,jobName:String) => {
+    let url3 = '/api/v1/applications/'+applicationName+'/resource?name='+jobName+'&appNamespace='+nameSpace+'&namespace='+nameSpace+'&resourceName='+jobName+'&version='+version+'&kind=Job&group=batch'
+    fetch(url3)
+    .then(response => {
+        return response.json()
+      })
+      .then((data: any) => {
+       
+        if(data.manifest.includes('message')){
+            let a = JSON.parse(data.manifest);
+            console.log(a);
+            console.log(a.status.conditions[a.status.conditions.length-1].message);
+            if(a.status?.conditions[a.status.conditions.length-1]?.message){
+                let stringValue = a.message.split(/\n/)[1];
+                var reportURL = stringValue.substring(stringValue.indexOf(':') + 1).trim();
+                console.log(reportURL);
+                window.open(reportURL, '_blank');            
+            }
+        }
+        
+      }).catch(err => {
+       
+        console.error('res.data', err)
+      });
+}
 
 const ImageItems = (props: {images: ImageInfo[]}) => {
     return (
