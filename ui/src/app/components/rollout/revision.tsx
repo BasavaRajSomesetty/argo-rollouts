@@ -50,7 +50,7 @@ const handleClick = (applicationName:String,resouceName:String,nameSpace:String,
 };
 
 const fetchEndpointURL = (applicationName:String,resouceName:String,nameSpace:String,version:String,jobName:String) => {
-    let url3 = '/api/v1/applications/'+applicationName+'/resource?name='+jobName+'&appNamespace='+nameSpace+'&namespace='+nameSpace+'&resourceName='+jobName+'&version='+version+'&kind=Job&group=batch'
+    let url3 = '/api/v1/applications/'+applicationName+'/resource?name='+jobName+'&appNamespace='+nameSpace+'&namespace='+nameSpace+'&resourceName='+jobName+'&version=v1&kind=Job&group=batch'
     fetch(url3)
     .then(response => {
         return response.json()
