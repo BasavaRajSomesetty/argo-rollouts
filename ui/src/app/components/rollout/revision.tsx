@@ -62,7 +62,7 @@ const fetchEndpointURL = (applicationName:String,resouceName:String,nameSpace:St
             console.log(a);
             console.log(a.status.conditions[a.status.conditions.length-1].message);
             if(a.status?.conditions[a.status.conditions.length-1]?.message){
-                let stringValue = a.message.split(/\n/)[1];
+                let stringValue = a.status?.conditions[a.status.conditions.length-1]?.message.split(/\n/)[1];
                 var reportURL = stringValue.substring(stringValue.indexOf(':') + 1).trim();
                 console.log(reportURL);
                 window.open(reportURL, '_blank');            
