@@ -9,6 +9,7 @@ export const ReportsWidget = (props: {  clickback: any; reportsInput: {}}) => {
     const [getURL, setURL] = React.useState('');
     const [loading, setLoading] = React.useState(true);
     const LoadApiCalls = (props: any) => {
+      console.log(props);
         setLoading(true);
         let url2 = '/api/v1/applications/' + props.applicationName + '/resource?name=' + props.resouceName + '&appNamespace=' + props.nameSpace + '&namespace=' + props.nameSpace + '&resourceName=' + props.resouceName + '&version=' + props.version + '&kind=AnalysisRun&group=argoproj.io';
         fetch(url2)
