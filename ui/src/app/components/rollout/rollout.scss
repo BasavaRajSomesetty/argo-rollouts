@@ -409,6 +409,7 @@
         }
     }
 }
+
 .reports {
     padding-bottom: 5em;
     &__info {
@@ -432,7 +433,7 @@
         width: 98%;
         position: absolute;
         top:0px;
-        height: 90%;
+        height: 100%;
         z-index: 3;
         
         &:last-child {
@@ -440,4 +441,5 @@
         }
     }
 }
+
 
