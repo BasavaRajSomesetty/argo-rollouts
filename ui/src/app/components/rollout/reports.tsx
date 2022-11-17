@@ -63,16 +63,16 @@ export const ReportsWidget = (props: {  clickback: any; reportsInput: {}}) => {
 
       return (
         <WaitFor loading={loading}>
-        <div style={{ margin: '1em 0', display: 'flex', alignItems: 'center', whiteSpace: 'nowrap' }}>
-          <div style={{ width: '100%', display: 'flex', alignItems: 'center', height: '2em', minWidth: 0 }}>
-            NEW WIDGET- IFRAME {getURL}
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <ActionButton
+        <div style={{ margin: '1em', width: '100%', height: '100%' }}>
+        <ActionButton
               action={() => props.clickback()}
               label='Back'
               icon='fa-undo-alt'
-              style={{ fontSize: '13px' }}
+              style={{ fontSize: '13px', width: '7%', marginBottom: '1em', marginLeft: 'auto' }}
             />
+          <div style={{ width: '100%', alignItems: 'center', height: '100%' }}>
+          <iframe src={getURL} width="100%" height="90%"></iframe>
+           
           </div>
         </div>
         </WaitFor>
