@@ -14,66 +14,6 @@ export interface Revision {
     analysisRuns: RolloutAnalysisRunInfo[];
 }
 
-const handleClick = (applicationName:String,resouceName:String,nameSpace:String,version:String) => {
-    //let url = '/api/v1/applications/'+applicationName+'/resource?name='+resouceName+'&namespace='+nameSpace+'&resourceName='+resouceName+'&version='+version+'&kind=AnalysisRun&group=argoproj.io';
-    //https://argocd.argo-dev.opsmx.net/api/v1/applications/jobapp/resource?name=rollouts-demo-bdc6c4d76-3.3&appNamespace=argocd&namespace=argocd&resourceName=rollouts-demo-bdc6c4d76-3.3&version=v1alpha1&kind=AnalysisRun&group=argoproj.io
-    let url2 = '/api/v1/applications/'+applicationName+'/resource?name='+resouceName+'&appNamespace='+nameSpace+'&namespace='+nameSpace+'&resourceName='+resouceName+'&version='+version+'&kind=AnalysisRun&group=argoproj.io';
-    fetch(url2)
-    .then(response => {
-        // if (response.status > 399) {
-        //   throw new Error("No metrics");
-        // }
-        return response.json()
-      })
-      .then((data: any) => {
-       
-        if(data.manifest.includes('reportUrl')){
-            let a = JSON.parse(data.manifest);
-            console.log(a.status.metricResults[a.status.metricResults.length-1].measurements[a.status.metricResults.length-1].metadata.reportUrl);
-            if(a.status?.metricResults[a.status.metricResults.length-1]?.measurements[a.status.metricResults.length-1]?.metadata?.reportUrl){
-                window.open(a.status?.metricResults[a.status.metricResults.length-1]?.measurements[a.status.metricResults.length-1]?.metadata?.reportUrl, '_blank');            
-            }
-        }
-        if(data.manifest.includes('job-name')){
-            let b = JSON.parse(data.manifest);
-            console.log(b);
-            if(b.status?.metricResults[b.status.metricResults.length-1]?.measurements[b.status.metricResults.length-1]?.metadata['job-name']){
-                fetchEndpointURL(applicationName,resouceName,nameSpace,version,b.status?.metricResults[b.status.metricResults.length-1]?.measurements[b.status.metricResults.length-1]?.metadata['job-name']);
-            }
-        }
-
-        
-      }).catch(err => {
-       
-        console.error('res.data', err)
-      });
-};
-
-const fetchEndpointURL = (applicationName:String,resouceName:String,nameSpace:String,version:String,jobName:String) => {
-    let url3 = '/api/v1/applications/'+applicationName+'/resource?name='+jobName+'&appNamespace='+nameSpace+'&namespace='+nameSpace+'&resourceName='+jobName+'&version=v1&kind=Job&group=batch'
-    fetch(url3)
-    .then(response => {
-        return response.json()
-      })
-      .then((data: any) => {
-       
-        if(data.manifest.includes('message')){
-            let a = JSON.parse(data.manifest);
-            console.log(a);
-            console.log(a.status.conditions[a.status.conditions.length-1].message);
-            if(a.status?.conditions[a.status.conditions.length-1]?.message){
-                let stringValue = a.status?.conditions[a.status.conditions.length-1]?.message.split(/\n/)[1];
-                var reportURL = stringValue.substring(stringValue.indexOf(':') + 1).trim();
-                console.log(reportURL);
-                window.open(reportURL, '_blank');            
-            }
-        }
-        
-      }).catch(err => {
-       
-        console.error('res.data', err)
-      });
-}
 
 const ImageItems = (props: {images: ImageInfo[]}) => {
     return (
@@ -92,6 +32,7 @@ const ImageItems = (props: {images: ImageInfo[]}) => {
 };
 
 interface RevisionWidgetProps {
+    revisionFunction: Function;
     revision: Revision;
     initCollapsed?: boolean;
     rollback?: (revision: number) => void;
@@ -105,6 +46,9 @@ export const RevisionWidget = (props: RevisionWidgetProps) => {
     const [collapsed, setCollapsed] = React.useState(initCollapsed);
     const icon = collapsed ? 'fa-chevron-circle-down' : 'fa-chevron-circle-up';
     const images = parseImages(revision.replicaSets);
+    const passDataToRevision = (data:any) => {
+        props.revisionFunction(data)
+      }
     return (
         <EffectDiv key={revision.number} className='revision'>
             <ThemeDiv className='revision__header'>
@@ -135,7 +79,7 @@ export const RevisionWidget = (props: RevisionWidgetProps) => {
                     {(revision.analysisRuns || []).length > 0 && (
                         <React.Fragment>
                             <div style={{marginTop: '1em'}}>
-                                <AnalysisRunWidget analysisRuns={revision.analysisRuns} appName={props.appName}/>
+                                <AnalysisRunWidget analysisRuns={revision.analysisRuns} appName={props.appName} analysisRunFunction={passDataToRevision}/>
                             </div>
                         </React.Fragment>
                     )}
@@ -145,7 +89,7 @@ export const RevisionWidget = (props: RevisionWidgetProps) => {
     );
 };
 
-const AnalysisRunWidget = (props: {analysisRuns: RolloutAnalysisRunInfo[],appName?: String}) => {
+const AnalysisRunWidget = (props: {analysisRuns: RolloutAnalysisRunInfo[],appName?: String,analysisRunFunction(data: { appName: String; resourceName: string; nameSpace: string; version: string; }): any;}) => {
     const {analysisRuns} = props;
     const [selection, setSelection] = React.useState<RolloutAnalysisRunInfo>(null);
 
@@ -187,8 +131,15 @@ const AnalysisRunWidget = (props: {analysisRuns: RolloutAnalysisRunInfo[],appNam
                                     action={
                                         () => {
                                             (selection?.objectMeta.name === ar.objectMeta.name ? setSelection(null) : setSelection(ar));
-                                            if(props?.appName){
-                                                handleClick(props.appName,resourceName,namespace,version)
+                                            if(props){
+                                                let data = {
+                                                    appName : props.appName,
+                                                    resourceName: resourceName,
+                                                    nameSpace: namespace,
+                                                    version: version,
+                                                    showReports: true
+                                                }
+                                               {props.analysisRunFunction(data)}
                                             }
                                         }}
                                     label={`Analysis ${temp[len - 2] + '-' + temp[len - 1]}`}  
