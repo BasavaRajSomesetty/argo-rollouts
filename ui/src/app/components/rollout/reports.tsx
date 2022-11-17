@@ -24,7 +24,7 @@ export const ReportsWidget = (props: {  clickback: any; reportsInput: {}}) => {
               let b = JSON.parse(data.manifest);
               console.log(b);
               if (b.status?.metricResults[b.status.metricResults.length - 1]?.measurements[b.status.metricResults.length - 1]?.metadata['job-name']) {
-                fetchEndpointURL(props.applicationName, props.reportsInput.resourceName, props.reportsInput.nameSpace, props.version, b.status?.metricResults[b.status.metricResults.length - 1]?.measurements[b.status.metricResults.length - 1]?.metadata['job-name']);
+                fetchEndpointURL(props.reportsInput.applicationName, props.reportsInput.resourceName, props.reportsInput.nameSpace, props.reportsInput.version, b.status?.metricResults[b.status.metricResults.length - 1]?.measurements[b.status.metricResults.length - 1]?.metadata['job-name']);
               }
             }
           }).catch(err => {
